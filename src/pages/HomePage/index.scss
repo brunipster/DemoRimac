@@ -1,0 +1,71 @@
+@import '~@styles/globals.scss';
+
+.p_home{
+    display: flex;
+    min-height: 100vh;
+}
+
+.p_home__info{
+    background: $color-blue;
+    width: 60%;
+
+    &_title{
+        color: white;
+    }
+}
+
+.p_home__info_list{
+    list-style: none;
+}
+
+.p_home__info_list_item{
+    display: flex;
+    align-items: center;
+    &_icon{
+        height: 25px;
+        fill: white;
+    }
+    &_text{
+        color:white;
+        padding-left: 16px;
+    }
+}
+
+.p_home__form{
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.p_home__form_wrapper{
+    width: 70%;
+}
+
+.p_home__form_title{
+    &__Blue{
+        color: $color-blue;
+    }
+}
+
+.p_home__form_wrapper_container{
+    margin-top: 32px;
+}
+
+.p_home__form_wrapper_container_check_link{
+    color: $color-gray;
+}
+
+@media screen and (min-width: $breakpoints-sm){
+
+}
+@media screen and (min-width: $breakpoints-md){
+
+}
+@media screen and (min-width: $breakpoints-lg){
+
+}
+@media screen and (min-width: $breakpoints-xl){
+
+}
