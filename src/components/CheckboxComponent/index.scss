@@ -4,9 +4,10 @@
     margin: 1rem 0;
 }
 
+
 .c_checkbox__input{
-    position: absolute; // take it out of document flow
-    opacity: 0; // hide it
+    position: absolute;
+    opacity: 0;
     z-index: 10000;
     cursor: pointer;
     height: 20px;
@@ -17,6 +18,7 @@
         position: relative;
         padding: 0;
         color: $color-gray;
+        // margin-left: 16px;
       }
     
       & + .c_checkbox__label:before {
@@ -71,3 +73,4 @@
         transform: rotate(45deg);
       }
 }
+

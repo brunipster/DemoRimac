@@ -1,7 +1,7 @@
-import { iInputModel, iCheckboxModel ,FormValidationHelper, iSelectModel } from '@helpers/FormValidatorHelper.ts';
+import { iInputModel, iCheckboxModel ,FormValidationHelper, iSelectModel, iRadioModel } from '@helpers/FormValidatorHelper.ts';
 import { DocumentTypeConstant } from "@helpers/DocumentTypeConstant";
 const oDocumentTypeConstant = new DocumentTypeConstant();
-export class ContactModel extends FormValidationHelper {
+export class OwnerInfoModel extends FormValidationHelper {
     
     sltDocumentType: iSelectModel<"DNI" | "CE" | "PAS" | "PTP"> = {
         name: "sltDocumentType",
@@ -9,7 +9,7 @@ export class ContactModel extends FormValidationHelper {
         isRequired: true,
         keyCode: "codeText",
         keyText: "name",
-        onChange: (value: any, form: ContactModel) => {
+        onChange: (value: any, form: OwnerInfoModel) => {
             let document = oDocumentTypeConstant.getDocumentByCodeText(value)
             console.log("document", document);
             return [{
@@ -33,6 +33,34 @@ export class ContactModel extends FormValidationHelper {
         autoFocus: true,
     };
 
+    inpFirstName: iInputModel = {
+        name: "inpFirstName",
+        isRequired: true,
+        type: "text",
+        autoFocus: false,
+    };
+
+    inpSecondName: iInputModel = {
+        name: "inpSecondName",
+        isRequired: true,
+        type: "text",
+        autoFocus: false,
+    };
+    
+    inpLastname: iInputModel = {
+        name: "inpLastname",
+        isRequired: true,
+        type: "text",
+        autoFocus: false,
+    };
+
+    inpLastnameSecond: iInputModel = {
+        name: "inpLastnameSecond",
+        isRequired: true,
+        type: "text",
+        autoFocus: false,
+    };
+
     inpBirthDate: iInputModel = {
         name: "inpBirthDate",
         isRequired: true,
@@ -41,12 +69,14 @@ export class ContactModel extends FormValidationHelper {
         pattern: "9[0-9]{8}",
     };
 
-    inpMobilephoneNumber: iInputModel = {
-        name: "inpMobilephoneNumber",
+    rdGenre: iRadioModel = {
         isRequired: true,
-        type: "tel",
-        maxLength: 9,
-        pattern: "9[0-9]{8}",
+        name: "rdGenre",
+    };
+
+    rdNumberInsurance: iRadioModel = {
+        isRequired: true,
+        name: "rdNumberInsurance",
     };
 
     chkAllowPolicyProtection: iCheckboxModel = {

@@ -4,6 +4,7 @@ import './index.scss';
 interface iProps{
     loadingText?: string;
     className?: string;
+    type?: 'submit' | 'reset' | 'button';
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     theme?: 'fill' | 'ghost' | 'outline' | 'tonality' | 'outlinewhite';
     loading?: boolean;
@@ -61,7 +62,7 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
 
     return (
         <button
-            type="button"
+        type={props.type || "button"}
             disabled={props.disabled || props.loading}
             className={className}
             onClick={onClickButton}

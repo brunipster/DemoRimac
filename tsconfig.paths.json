@@ -5,8 +5,10 @@
         "@models/*": ["./src/models/*"],
         "@helpers/*": ["./src/helpers/*"],
         "@components/*": ["./src/components/*"],
+        "@sections/*": ["./src/sections/*"],
         "@pages/*": ["./src/pages/*"],
-        "@icons/*": ["./src/assets/icons/*"]
+        "@icons/*": ["./src/assets/icons/*"],
+        "@services/*": ["./src/services/*"]
       }
     }
 }

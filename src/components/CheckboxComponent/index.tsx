@@ -7,13 +7,18 @@ interface iProps{
     model:iCheckboxModel;
     onChange?: (event: any) => void;
 }
+
 const Component:React.FunctionComponent<iProps> = (props:iProps) => {
+    function isInvalid(): boolean {
+        return Boolean(props.model.isRequired && !props.model.value)
+      }
     function handleChange(event: any) {
-        console.log("GG")
         props.onChange && props.onChange(event);
     }
+
+    let classInvalid = isInvalid() ? "c_checkbox__IsInvalid" : "";
     return (
-        <div className="c_checkbox">
+        <div className={`c_checkbox ${classInvalid}`}>
             <input 
             className="c_checkbox__input" 
             id={props.model.name} 

@@ -4,7 +4,7 @@ export interface iInputModel {
     name: string;
   
     value?: any;
-    type?: "email" | "text" | "tel" | "decimal";
+    type?: "email" | "text" | "tel" | "decimal" | "date";
     pattern?: any;
     isRequired?: boolean;
     isVisible?: boolean;
@@ -46,6 +46,15 @@ export interface iCheckboxModel {
   /**
   * Custom data
   */
+  data?: any;
+}
+
+export interface iRadioModel<iValue = any> {
+  name: string;
+
+  value?: iValue;
+  isRequired?: boolean;
+  isVisible?: boolean;
   data?: any;
 }
 
@@ -92,7 +101,37 @@ export interface iSelectModel<iValue = any> {
 export class FormValidationHelper {
   oFormHelper = new FormHelper();
 
-  
+  setStateField = (prevForm: any, fields: Array<iSelectModel | iCheckboxModel | iInputModel>) => {
+    let form = { ...prevForm }
+
+    for (let field of fields) {
+      let key = field.name
+
+      field.isVisible = typeof field.isVisible === "boolean" ? field.isVisible : field.isRequired !== false;
+      field.value = typeof field.value === "undefined" ? form[key].value : field.value;
+
+      form[key] = Object.assign(form[key], field)
+    }
+    return form;
+  }
+
+  getStateSelect = (form: any, event: iOnChangeSelect) => {
+    let select: iSelectModel = form[event.name]
+
+    if (select.onChange) {
+      form = this.setStateField(form, select.onChange(event.keyCode, form))
+    }
+
+    return {
+      ...form,
+      [event.name]: {
+        ...form[event.name],
+        value: event.keyCode,
+        valueText: event.keyText,
+        validity: true
+      } as iSelectModel,
+    }
+  }
 
   runValidations = (value:any, field: any, validity:any, form:any) => {
     let validationError = { valid: true }
@@ -136,7 +175,6 @@ export class FormValidationHelper {
   getStateCheckbox = (form: any, event: any) => {
     let fieldName = event.target.name;
     let value = event.target.checked;
-    console.log(fieldName, value)
     return {
       ...form,
       [fieldName]: {
@@ -148,16 +186,4 @@ export class FormValidationHelper {
     }
   }
 
-  getStateSelect = (form: any, event: iOnChangeSelect) => {
-
-    return {
-      ...form,
-      [event.name]: {
-        ...form[event.name],
-        value: event.keyCode,
-        valueText: event.keyText,
-        validity: true
-      } as iSelectModel,
-    }
-  }
 }

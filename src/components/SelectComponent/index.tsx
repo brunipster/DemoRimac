@@ -7,9 +7,7 @@ import './index.scss'
 interface iProps {
     label: string;
     model: iSelectModel;
-  
     options?: Array<any>;
-  
     className?: string;
     onChange?: (select: iOnChangeSelect) => void
 }
@@ -43,7 +41,6 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
           keyCode: option[keyCode],
           keyText: option[keyText],
         });
-
       }
 
     const renderDropdown = () => {
@@ -111,7 +108,7 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
     }
 
     return (
-        <div className="c_select">
+        <div className={`c_select ${props.className}`}>
             <input
             name={props.model.name}
             className={`c_select__field e-text-regular`}
@@ -119,7 +116,7 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
             type="text"
             onClick={evaluateShowDropdown}
             onBlur={hideDropdown}
-            // onChange={handleChange}
+            onChange={handleChange}
             disabled={disabled || isLoading}
             readOnly
             value={getOptionActive().valueText}

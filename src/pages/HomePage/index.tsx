@@ -1,29 +1,52 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import './index.scss';
+
 import {ReactComponent as ShieldIcon} from '@icons/shield.svg'
+import {ReactComponent as PhoneIcon} from '@icons/phone.svg'
+import {ReactComponent as MoneyIcon} from '@icons/money.svg'
+import {ReactComponent as HospitalIcon} from '@icons/hospital.svg'
+
 import {ContactModel} from '@models/ContactModel'
 import InputComponent from '@components/InputComponent'
+import InputDateComponent from '@components/InputDateComponents'
 import SelectComponent from '@components/SelectComponent'
 import CheckboxComponent from '@components/CheckboxComponent'
 import ButtonComponent from '@components/ButtonComponent'
+
+import PersonalInfoSection from '@sections/PersonalInfoSection'
+import PlanSelectionSection from '@sections/PlanSelectionSection'
+
+import WizardComponent from '@components/WizardComponent'
+
+import PersonaServices, {iBodyRequest, iBodyResponse} from '@services/PersonaServices'
 import { DocumentTypeConstant } from "@helpers/DocumentTypeConstant";
 import { iOnChangeSelect } from '@helpers/FormValidatorHelper';
 
 const oDocumentTypeConstant = new DocumentTypeConstant();
 const Component:React.FunctionComponent = () => {
+
     const [form, setForm] = useState<ContactModel>(new ContactModel())
+    const [userValidated, setUserValidated] = useState<iBodyResponse | undefined>({})
+    const [isLoadingForm, setIsLoadingForm] = useState<boolean>(false)
+    const [isEnable, setIsEnable] = useState<boolean>(false)
+    const [stepActive, setStepActive] = useState<number>(0)
+    const [totalSteps, setTotalStep] = useState<number>(5)
+    const [] = useState<boolean>(false)
+    const refWizard: any = useRef();
 
 
     const handleInput = (event: any) => {
         setForm(form.getStateInput(form, event))
     }
 
-
     const handleCheckbox = (event: any) => {
-        // let inputName = event.target.name;
-        // let inputValue = event.target.checked;
-    
         let currentForm = form.getStateCheckbox(form, event);
+        
+        if(currentForm.chkAllowPolicyDelivery.value && currentForm.chkAllowPolicyProtection.value){
+            setIsEnable(true);
+        }else{
+            setIsEnable(false);
+        }
 
         setForm(currentForm)
       }
@@ -34,66 +57,141 @@ const Component:React.FunctionComponent = () => {
         setForm(currentForm)
     }
 
+    async function submitForm(e: any) {
+        e.preventDefault();
+        setIsLoadingForm(true);
+        try {
+            const body:iBodyRequest = {
+                documentType: form.sltDocumentType.value!,
+                documentNumber: form.inpDocumentNumber.value,
+                birthDay: form.inpBirthDate.value,
+                phoneNumber: form.inpMobilephoneNumber.value
+            }
+           const result = await PersonaServices.getUserInfo(body)
+           const dataResult:iBodyResponse = result.data?.data.tercero;
+           setUserValidated(dataResult);
+        } catch (error) {
+            
+        } finally {
+            setIsLoadingForm(false);
+        }
+    }
+
+    const handleChangeStepWizard = (stepActive: number) => {
+        setStepActive(stepActive);
+    };
+
+    function getWizardItems(): Array<any> {
+        let wizardItems: Array<any> = [
+          {
+            Component: PersonalInfoSection,
+            props: {
+              currentStep: 1,
+              totalSteps: totalSteps
+            }
+          },
+          {
+            Component: PlanSelectionSection,
+            props: {
+              currentStep: 2,
+              totalSteps: totalSteps
+            }
+          },
+        ];
+        
+        return wizardItems;
+      }
     return (
         <div className="p_home">
             <div className="p_home__info">
-                <h1 className="p_home__info_title e-h2 e-text-light">Seguro de <br/><span className="e-text-regular">Salud</span></h1>
-                <ul className="p_home__info_list">
-                    <li className="p_home__info_list_item">
-                        <ShieldIcon className="p_home__info_list_item_icon"></ShieldIcon>
-                        <span className="p_home__info_list_item_text e-p4">Cómpralo de manera fácil y rápida</span>
-                    </li>
-                </ul>
+                <div className="p_home__info_wrapper">
+                    <h1 className="p_home__info_title e-h2 e-text-light">Seguro de <br/><span className="e-text-regular">Salud</span></h1>
+                    <ul className="p_home__info_list">
+                        <li className="p_home__info_list_item">
+                            <ShieldIcon className="p_home__info_list_item_icon"></ShieldIcon>
+                            <span className="p_home__info_list_item_text e-p4 e-text-light">Cómpralo de manera fácil y rápida</span>
+                        </li>
+                        <li className="p_home__info_list_item">
+                            <PhoneIcon className="p_home__info_list_item_icon"></PhoneIcon>
+                            <span className="p_home__info_list_item_text e-p4 e-text-light">Cotiza y compra tu seguro 100% digital</span>
+                        </li>
+                        <li className="p_home__info_list_item">
+                            <MoneyIcon className="p_home__info_list_item_icon"></MoneyIcon>
+                            <span className="p_home__info_list_item_text e-p4 e-text-light">Hasta S/.12 millones de cobertura anual</span>
+                        </li>
+                        <li className="p_home__info_list_item">
+                            <HospitalIcon className="p_home__info_list_item_icon"></HospitalIcon>
+                            <span className="p_home__info_list_item_text e-p4 e-text-light">Más de 300 clínicas en todo el Perú</span>
+                        </li>
+                    </ul>
+                    <small className="p_home__info_footer e-p6 e-text-light"> 2020 RIMAC Seguros y Reaseguros</small>
+                </div>
+                
             </div>
             <div className="p_home__form">
                 <div className="p_home__form_wrapper">
-                    <h3 className="p_home__form_title e-h5 e-text-light">Obtén tu <span className="p_home__form_title__Blue e-text-regular">seguro ahora</span></h3>
-                    <p className="p_home__form_subtitle e-p4 e-text-light">Ingresa los datos para comenzar</p>
-                    <div className="p_home__form_wrapper_container">
-                        <form>
-                            <SelectComponent
-                                className={``}
-                                label="Tipo de documento*"
-                                options={oDocumentTypeConstant.listMainDocuments.map((elm)=>{return({...elm, name:elm.codeText})})}
-                                model={form.sltDocumentType}
-                                onChange={handleSelect}
-                            />
-                            <InputComponent
-                                className=""
-                                label="Número de Documento*"
-                                model={form.inpDocumentNumber}
-                                onChange={handleInput}
-                            />
-                            <InputComponent
-                                className=""
-                                label="Fecha de Nacimiento*"
-                                model={form.inpBirthDate}
-                                onChange={handleInput}
-                            />
-                            <InputComponent
-                                className=""
-                                label="Celular*"
-                                model={form.inpMobilephoneNumber}
-                                onChange={handleInput}
-                            />
+                    {!userValidated ?
+                        <>
+                            <h3 className="p_home__form_title e-h5 e-text-light">Obtén tu <span className="p_home__form_title__Blue e-text-regular">seguro ahora</span></h3>
+                            <p className="p_home__form_subtitle e-p4 e-text-light">Ingresa los datos para comenzar</p>
+                            <div className="p_home__form_wrapper_container">
+                                <form onSubmit={submitForm}>
+                                    <div className="p_home__form_input_group">    
+                                        <SelectComponent
+                                            className="p_home__form_input_group_item"
+                                            label="Tipo de documento*"
+                                            options={oDocumentTypeConstant.listMainDocuments.map((elm)=>{return({...elm, name:elm.codeText})})}
+                                            model={form.sltDocumentType}
+                                            onChange={handleSelect}
+                                        />
+                                        <InputComponent
+                                            className="p_home__form_input_group_item"
+                                            label="Número de Documento*"
+                                            model={form.inpDocumentNumber}
+                                            onChange={handleInput}
+                                        />
+                                    </div>
+                                    <InputDateComponent
+                                        className=""
+                                        label="Fecha de Nacimiento*"
+                                        model={form.inpBirthDate}
+                                        onChange={handleInput}
+                                    />
+                                    <InputComponent
+                                        className=""
+                                        label="Celular*"
+                                        model={form.inpMobilephoneNumber}
+                                        onChange={handleInput}
+                                    />
+        
+                                    <CheckboxComponent
+                                        className=""
+                                        label={<>Acepto la <a className="p_home__form_wrapper_container_check_link e-text-regular" href="#">Politica de Datos Personales y los Términos y Condiciones</a></>}
+                                        model={form.chkAllowPolicyProtection}
+                                        onChange={handleCheckbox}
+                                    />
+        
+        
+                                    <CheckboxComponent
+                                        className=""
+                                        label={<>Acepto la <a className="p_home__form_wrapper_container_check_link e-text-regular" href="#">Politica de Envío de Comunicaciones Comerciales</a></>}
+                                        model={form.chkAllowPolicyDelivery}
+                                        onChange={handleCheckbox}
+                                    />
+                                    <ButtonComponent type={"submit"} loading={isLoadingForm} disabled={!isEnable}>COMENCEMOS</ButtonComponent>
+                                </form>
+                            </div>
+                        </>
+                    :
+                        <WizardComponent
+                            handleChangeStep={handleChangeStepWizard}
+                            items={getWizardItems()}
+                            hideStepContent
+                        >
 
-                            <CheckboxComponent
-                                className=""
-                                label={<>Acepto la <a className="p_home__form_wrapper_container_check_link e-text-regular" href="#">Politica de Datos Personales y los Términos y Condiciones</a></>}
-                                model={form.chkAllowPolicyProtection}
-                                onChange={handleCheckbox}
-                            />
-
-
-                            <CheckboxComponent
-                                className=""
-                                label={<>Acepto la <a className="p_home__form_wrapper_container_check_link e-text-regular" href="#">Politica de Envío de Comunicaciones Comerciales</a></>}
-                                model={form.chkAllowPolicyDelivery}
-                                onChange={handleCheckbox}
-                            />
-                            <ButtonComponent loading={false}>COMENCEMOS</ButtonComponent>
-                        </form>
-                    </div>
+                        </WizardComponent>  
+                    }
+                    
                 </div>
             </div>
         </div>

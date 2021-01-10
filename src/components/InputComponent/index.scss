@@ -52,7 +52,7 @@
     color: black;
     box-shadow: none;
     height: 20px;
-    margin-top: 22px;
+    padding-top: 22px;
     font-size: 16px;
     padding-left: 0;
 
@@ -70,4 +70,16 @@
     font-size: 13px;
     top: 0;
     left: 0;
+}
+
+.c_input__wrapper__IsInvalid{
+    .c_input__wrapper_field:focus ~ .c_input__label{
+      font-size: 14px;
+      color: red;
+      top: 0;
+      left: 0;
+    }
+    .c_input__wrapper_field ~ .c_input__label{
+      color: red !important;
+    }
 }
