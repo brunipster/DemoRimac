@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import InputComponent from '@components/InputComponent'
 import InputDateComponent from '@components/InputDateComponents'
 import SelectComponent from '@components/SelectComponent'
@@ -18,32 +18,30 @@ interface iProps {
     currentStep: number;
     totalSteps: number;
     prevCustomStep?: number;
-  
+    nameClient?: string;
+    setPersonalInfo: (arg:OwnerInfoModel) => void;
+    formPersonalInfo: OwnerInfoModel;
     wizardNextstep: Function
     wizardPrevstep: Function
   }
 const Component:React.FunctionComponent<iProps> = (props:iProps) => {
     const [form, setForm] = useState<OwnerInfoModel>(new OwnerInfoModel())
-    const [isLoadingForm, setIsLoadingForm] = useState<boolean>(false)
-    const [isEnable, setIsEnable] = useState<boolean>(false)
-    const [stepActive, setStepActive] = useState<number>(0)
-    const [totalSteps, setTotalStep] = useState<number>(5)
+    const [isLoadingForm] = useState<boolean>(false)
     const [] = useState<boolean>(false)
+
+    useEffect(()=>{
+        setForm(props.formPersonalInfo)
+    },[props.formPersonalInfo])
 
     async function submitForm(e: any) {
         e.preventDefault();
+        props.setPersonalInfo && props.setPersonalInfo(form);
         props.wizardNextstep();
     }
 
     const handleInput = (event: any) => {
         setForm(form.getStateInput(form, event))
     }
-
-    const handleCheckbox = (event: any) => {
-        let currentForm = form.getStateCheckbox(form, event);
-                
-        setForm(currentForm)
-      }
 
     const handleSelect = (select: iOnChangeSelect) => {
         let currentForm = form.getStateSelect(form, select);
@@ -53,7 +51,7 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
 
     return (
         <div className="s_personal_info">
-            <h3 className="s_personal_info__title e-h5 e-text-light">Hola, <span className="s_personal_info__title__Blue e-text-regular">Pepito</span></h3>
+            <h3 className="s_personal_info__title e-h5 e-text-light">Hola{props.nameClient && <>, <span className="e-text-blue e-text-regular">{props.nameClient}</span></>}</h3>
             <p className="s_personal_info__subtitle e-p4 e-text-light">Valida de los datos sean correctos.</p>
             <div className="p_home__form_wrapper_container">
                 <h3 className="e-p2 e-text-light">Datos personales del titular</h3>
@@ -111,7 +109,7 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
 
                     <RadioComponent
                         onChange={handleInput}
-                        classItem="col-sm-6 radio_card_hour"
+                        classItem=""
                         model={form.rdGenre}
                         label={"Género"}
                         options={[
@@ -128,7 +126,7 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
 
 <RadioComponent
                         onChange={handleInput}
-                        classItem="col-sm-6 radio_card_hour"
+                        classItem=""
                         model={form.rdNumberInsurance}
                         label={"¿A quién vamos a asegurar?"}
                         options={[
@@ -145,7 +143,7 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
 
                     <div className="s_personal_info__form_buttons">
 
-                        <ButtonComponent className="s_personal_info__form_button" type={"submit"} loading={isLoadingForm} disabled={!isEnable}>CONTINUAR</ButtonComponent>
+                        <ButtonComponent className="s_personal_info__form_button" type={"submit"} loading={isLoadingForm}>CONTINUAR</ButtonComponent>
                     </div>
                 </form>
             </div>

@@ -22,6 +22,11 @@
         fill: $color-blue;
         width: 24px
     }       
+
+    &:disabled svg{
+        fill: $color-gray;
+        width: 24px 
+    }
 }
 
 .c_wizard__content{

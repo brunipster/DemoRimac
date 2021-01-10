@@ -21,18 +21,21 @@ import WizardComponent from '@components/WizardComponent'
 import PersonaServices, {iBodyRequest, iBodyResponse} from '@services/PersonaServices'
 import { DocumentTypeConstant } from "@helpers/DocumentTypeConstant";
 import { iOnChangeSelect } from '@helpers/FormValidatorHelper';
+import {OwnerInfoModel} from '@models/OwnerInfoModel';
+import {PlanSelectionModel} from '@models/PlanSelectionModel';
+import { get } from 'https';
 
 const oDocumentTypeConstant = new DocumentTypeConstant();
 const Component:React.FunctionComponent = () => {
 
     const [form, setForm] = useState<ContactModel>(new ContactModel())
-    const [userValidated, setUserValidated] = useState<iBodyResponse | undefined>({})
+    const [formPersonalInfo, setFormPersonalInfo] = useState<OwnerInfoModel>(new OwnerInfoModel())
+    const [formPlanSelection, setFormPlanSelection] = useState<PlanSelectionModel>(new PlanSelectionModel())
+    const [userValidated, setUserValidated] = useState<iBodyResponse | undefined>()
     const [isLoadingForm, setIsLoadingForm] = useState<boolean>(false)
     const [isEnable, setIsEnable] = useState<boolean>(false)
-    const [stepActive, setStepActive] = useState<number>(0)
-    const [totalSteps, setTotalStep] = useState<number>(5)
+    const [isformCompleted, setIsFormCompleted] = useState<boolean>(false)
     const [] = useState<boolean>(false)
-    const refWizard: any = useRef();
 
 
     const handleInput = (event: any) => {
@@ -69,32 +72,45 @@ const Component:React.FunctionComponent = () => {
             }
            const result = await PersonaServices.getUserInfo(body)
            const dataResult:iBodyResponse = result.data?.data.tercero;
+           let personalInfo = new OwnerInfoModel()
+           personalInfo.fillByResponse(dataResult)
            setUserValidated(dataResult);
+           setFormPersonalInfo(personalInfo);
         } catch (error) {
-            
+            console.log(error)
         } finally {
             setIsLoadingForm(false);
         }
     }
 
     const handleChangeStepWizard = (stepActive: number) => {
-        setStepActive(stepActive);
+        if(stepActive == getWizardItems().length){
+            setIsFormCompleted(true);
+        }
     };
+
+    const setPersonalInfo = (form:OwnerInfoModel) => {
+        setFormPersonalInfo(form);
+    }
+    const setPlanSelection = (form:PlanSelectionModel) => {
+        setFormPlanSelection(form);
+    }
 
     function getWizardItems(): Array<any> {
         let wizardItems: Array<any> = [
           {
             Component: PersonalInfoSection,
             props: {
-              currentStep: 1,
-              totalSteps: totalSteps
+              formPersonalInfo: formPersonalInfo,
+              setPersonalInfo: setPersonalInfo,
+              nameClient: userValidated?.nombres
             }
           },
           {
             Component: PlanSelectionSection,
             props: {
-              currentStep: 2,
-              totalSteps: totalSteps
+              formPlanSelection: formPlanSelection,
+              setPlanSelection: setPlanSelection,
             }
           },
         ];
@@ -130,9 +146,11 @@ const Component:React.FunctionComponent = () => {
             </div>
             <div className="p_home__form">
                 <div className="p_home__form_wrapper">
-                    {!userValidated ?
+
+                    {!isformCompleted ?
+                        !userValidated ?
                         <>
-                            <h3 className="p_home__form_title e-h5 e-text-light">Obtén tu <span className="p_home__form_title__Blue e-text-regular">seguro ahora</span></h3>
+                            <h3 className="p_home__form_title e-h5 e-text-light">Obtén tu <span className="e-text-blue e-text-regular">seguro ahora</span></h3>
                             <p className="p_home__form_subtitle e-p4 e-text-light">Ingresa los datos para comenzar</p>
                             <div className="p_home__form_wrapper_container">
                                 <form onSubmit={submitForm}>
@@ -189,7 +207,15 @@ const Component:React.FunctionComponent = () => {
                             hideStepContent
                         >
 
-                        </WizardComponent>  
+                        </WizardComponent>
+                        :
+                        <div className="p_home__form_greetings">
+                            <h3 className="e-h4 e-text-light">¡Gracias por <span className="e-text-blue e-text-regular">confiar en <br/> nosotros!</span></h3>
+                            <p className="e-p5 e-text-light">Queremos conocer mejor la salud de los asegurados. Un asesor <strong>se pondrá en contacto</strong> contigo en las siguientes <strong>48 horas.</strong></p>
+                            <div className="p_home__form_greetings_button">
+                            <ButtonComponent type={"button"} loading={isLoadingForm}>IR A SALUD</ButtonComponent>
+                            </div>
+                        </div>
                     }
                     
                 </div>

@@ -19,10 +19,10 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
     const [loadRender, setLoadRender] = useState<boolean>(false);
     const [position, setPosition] = useState<"top" | "bottom">("bottom");
     const [dropdownInlineStyle, setDropdownInlineStyle] = useState<any>({});
-    let disabled = props.model.disabled || false;
-    let isLoading = props.model.isLoading || false;
-    let keyCode = props.model.keyCode || "key";
-    let keyText = props.model.keyText || "text";
+    let disabled = props.model?.disabled || false;
+    let isLoading = props.model?.isLoading || false;
+    let keyCode = props.model?.keyCode || "key";
+    let keyText = props.model?.keyText || "text";
     let options = props.options || [];
 
     let refFormGroup: any = useRef(null);

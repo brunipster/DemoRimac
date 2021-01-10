@@ -1,5 +1,5 @@
 export interface iDocumentType {
-  code: "0" | "1" | "4" | "6" | "7" | "8" | "9";
+  code: "0" | "1" | "2" | "6" | "7" | "8" | "9";
   codeText: "DNI" | "CE" | "PAS" | "PTP" | "CRE" | "CIE" | "CSR";
   name: string;
   pattern: string;
@@ -23,7 +23,7 @@ export class DocumentTypeConstant {
   };
 
   PAS: iDocumentType = {
-    code: '4', codeText: "PAS",
+    code: '2', codeText: "PAS",
     name: 'Pasaporte',
     pattern: '[A-Za-z0-9]{5,15}', regex: /[^A-Za-z0-9]/g,
     maxLength: 15,

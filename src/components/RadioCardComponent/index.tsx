@@ -10,7 +10,7 @@ interface iProps {
     options: Array<{
       code: any;
       name: any;
-      icon?: any;
+      content?: JSX.Element;
     }>;
     onChange?: (event: any) => void;
   }
@@ -23,22 +23,24 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
 
 
     return (
-        <div className="c_radio">
+        <div className="c_radio_card">
             <p className="e-p5">{props.label}</p>
          {props.options.map((elm, index)=>{
+             let classSelected = props.model.value === elm.code ? "c_radio_card__item__Selected" : "";
              return (
-                 <div key={index} className="c_radio__item">
+                 <div key={index} className={`c_radio_card__item ${classSelected}`}>
                     <input
                         data-input-type="radio"
                         type="radio"
-                        className="c_radio__item_radio_input"
+                        className="c_radio_card__item_radio_input"
                         name={props.model.name || ""}
                         value={elm.code}
                         required={props.model.isRequired || false}
                         onChange={selectOption}
-                        checked={props.model.value === elm.code}
+                        checked={props.model.value == elm.code}
                    />
-                   <label className="c_radio__item_radio_label e-text-regular">{elm.name}</label>
+                   <span></span>
+                   {elm.content}
                  </div>
              )
          })}

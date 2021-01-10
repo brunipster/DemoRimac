@@ -1,5 +1,6 @@
-import { iInputModel, iCheckboxModel ,FormValidationHelper, iSelectModel, iRadioModel } from '@helpers/FormValidatorHelper.ts';
+import { iInputModel ,FormValidationHelper, iSelectModel, iRadioModel } from '@helpers/FormValidatorHelper.ts';
 import { DocumentTypeConstant } from "@helpers/DocumentTypeConstant";
+import {iBodyResponse} from '@services/PersonaServices'
 const oDocumentTypeConstant = new DocumentTypeConstant();
 export class OwnerInfoModel extends FormValidationHelper {
     
@@ -79,12 +80,13 @@ export class OwnerInfoModel extends FormValidationHelper {
         name: "rdNumberInsurance",
     };
 
-    chkAllowPolicyProtection: iCheckboxModel = {
-        name: "chkAllowPolicyProtection",
-        isRequired: true,
-    };
-    chkAllowPolicyDelivery: iCheckboxModel = {
-        name: "chkAllowPolicyDelivery",
-        isRequired: true,
-    };
+    fillByResponse (response: iBodyResponse){
+        const document = Object.values(oDocumentTypeConstant).find(doc => doc.code == response.tipoDocumento)
+        this.sltDocumentType.value = document?.codeText;
+        this.inpDocumentNumber.value = response.numDocumento;
+        this.inpFirstName.value = response.nombres;
+        this.inpLastname.value = response.apellidoPaterno;
+        this.inpLastnameSecond.value = response.apellidoMaterno;
+        this.rdGenre.value = response.sexo;
+    }
 }

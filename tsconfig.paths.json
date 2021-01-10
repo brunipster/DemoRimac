@@ -8,6 +8,7 @@
         "@sections/*": ["./src/sections/*"],
         "@pages/*": ["./src/pages/*"],
         "@icons/*": ["./src/assets/icons/*"],
+        "@images/*": ["./src/assets/images/*"],
         "@services/*": ["./src/services/*"]
       }
     }

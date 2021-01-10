@@ -17,43 +17,30 @@ interface iProps {
   
 
 const Component:React.FunctionComponent<iProps> = (props:iProps) => {
-    const refComponent: Array<any> = [];
     const [active, setActive] = useState(0)
-    const [isResetSteps, setIsResetSteps] = useState<boolean>(false)
 
     const changeStep = (index: number) => {
         setActive(index)
-        
-        if (props.handleChangeStep) props.handleChangeStep(index)
-  
-        if (props.items[index].props.ref) {
-          props.items[index].props.ref.current.wizardOnShowContent && props.items[index].props.ref.current.wizardOnShowContent()
-        }
-        else {
-          refComponent[index].current.wizardOnShowContent && refComponent[index].current.wizardOnShowContent()
-        }
     }
 
     const nextStep = () => {
-        changeStep(active + 1)
+      if (props.handleChangeStep) props.handleChangeStep(active + 1)
+      if((active+1) < props.items.length){
+          changeStep(active + 1)
+        }
       }
     
     const  prevStep = () => {
         changeStep(active - 1)
     }
     
-    const  resetStep = () => {
-        setIsResetSteps(true)
-        changeStep(0)
-    };
-    
 
-    const Component = props.items[active].Component
-    refComponent[active] = React.createRef();
+    const Component = active <= props.items.length-1 &&  props.items[active].Component
+    
     return (
         <div className="c_wizard">
             <div className="c_wizard__step">
-                <button className="c_wizard__step_back_button"><BackIcon/></button>
+                <button className="c_wizard__step_back_button" onClick={prevStep} disabled={active === 0}><BackIcon/></button>
                 <p className="c_wizard__step_title e-p3"><span className="c_wizard__step_title__Blue e-p3">Paso {active+1}</span> de {props.items.length}</p>
             </div>
             <div className="c_wizard__content">
@@ -61,12 +48,10 @@ const Component:React.FunctionComponent<iProps> = (props:iProps) => {
                 className={`c_wizard__content_item`}
                 >
                 <Component
-                    {...props}
+                    {...props.items[active].props}
                     wizardPrevstep={prevStep}
                     wizardNextstep={nextStep}
-                    wizardResetStep={resetStep}
                     wizardGoStep={changeStep}
-                    ref={props.ref || refComponent![active]}
                 />
                 </div>
             </div>
