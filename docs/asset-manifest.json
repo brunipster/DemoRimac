@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.881c0a79.chunk.css",
+    "main.js": "/static/js/main.7926be7f.chunk.js",
+    "main.js.map": "/static/js/main.7926be7f.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.73d60168.js",
+    "runtime-main.js.map": "/static/js/runtime-main.73d60168.js.map",
+    "static/js/2.3c9422f4.chunk.js": "/static/js/2.3c9422f4.chunk.js",
+    "static/js/2.3c9422f4.chunk.js.map": "/static/js/2.3c9422f4.chunk.js.map",
+    "static/js/3.dda2b85c.chunk.js": "/static/js/3.dda2b85c.chunk.js",
+    "static/js/3.dda2b85c.chunk.js.map": "/static/js/3.dda2b85c.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.881c0a79.chunk.css.map": "/static/css/main.881c0a79.chunk.css.map",
+    "static/js/2.3c9422f4.chunk.js.LICENSE.txt": "/static/js/2.3c9422f4.chunk.js.LICENSE.txt",
+    "static/media/arrow-down.acd7b8c1.svg": "/static/media/arrow-down.acd7b8c1.svg",
+    "static/media/heart.b16558c9.svg": "/static/media/heart.b16558c9.svg",
+    "static/media/hospital.0a27fba9.svg": "/static/media/hospital.0a27fba9.svg",
+    "static/media/left-arrow.fd8fde94.svg": "/static/media/left-arrow.fd8fde94.svg",
+    "static/media/money.0e0f23fd.svg": "/static/media/money.0e0f23fd.svg",
+    "static/media/phone.3864d9a3.svg": "/static/media/phone.3864d9a3.svg",
+    "static/media/shield.b3f9a4b9.svg": "/static/media/shield.b3f9a4b9.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.73d60168.js",
+    "static/js/2.3c9422f4.chunk.js",
+    "static/css/main.881c0a79.chunk.css",
+    "static/js/main.7926be7f.chunk.js"
+  ]
+}
